@@ -17,6 +17,7 @@ export
         fireworks({
           x: window.innerWidth / 2,
           y: window.innerHeight / 2,
+          colors: ['#bc1a15', '#6b2624']
         });
       } else if (!hasNull) {
         setWinner(false);

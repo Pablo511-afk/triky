@@ -31,6 +31,7 @@ body {
 
 .board {
   width: fit-content;
+  padding-top: 60%;
   margin: 40px auto;
   text-align: center;
 }
@@ -83,7 +84,7 @@ body {
 
 .square.is-selected {
   color: #fff;
-  background: #09f;
+  background: rgb(188, 17, 17);
 }
 
 .winner {
@@ -128,4 +129,9 @@ body {
   place-items: center;
   cursor: pointer;
   font-size: 48px;
+}
+
+.square:hover {
+  border-color: #bc1a15; /* Color azulado */
+  box-shadow: 0 0 10px rgba(255, 47, 0, 0.6); /* Resplandor azulado */
 }
