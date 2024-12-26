@@ -28,7 +28,7 @@ function App() {
     setTurn(newTurn);
     setBoard(newBoard);
     handleWinner(newBoard, setWinner);
-    saveGame(newBoard, newTurn);
+    saveGame({newBoard, turn});
   };
 
   const resetForm = () => {
