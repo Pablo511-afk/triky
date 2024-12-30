@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WinnerModal } from "./components/WinnerModal";
 import { Square } from "./components/Square";
 import { TURNS } from "./constants";
@@ -7,17 +7,30 @@ import { Board } from "./components/Board";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { resetGame, saveGame } from "./logic/Storage";
+import { usePointerMove } from "./hooks/UsePointerMove";
 
 function App() {
   const [board, setBoard] = useState(() => {
-    const board = window.localStorage.getItem("board") ?? null;
+    const board = window.localStorage.getItem("board");
     return board ? JSON.parse(board) : Array(9).fill(null);
   });
   const [turn, setTurn] = useState(() => {
-    const turn = window.localStorage.getItem("turn") ?? null;
+    const turn = window.localStorage.getItem("turn");
     return turn ?? TURNS.X;
   });
   const [winner, setWinner] = useState(null);
+  const { position } = usePointerMove();
+
+  useEffect(() => {
+    const cursorImage = turn === TURNS.X ? "../images/x.png" : "../images/o.png";
+
+    document.body.style.cursor = `url(${cursorImage}), auto`;
+
+    return () =>{ 
+      document.body.style.cursor = '';
+    }
+  }, [turn])
+
 
   const updateBoard = (index) => {
     if (board[index] || winner) return;
@@ -28,7 +41,7 @@ function App() {
     setTurn(newTurn);
     setBoard(newBoard);
     handleWinner(newBoard, setWinner);
-    saveGame({newBoard, turn});
+    saveGame({newBoard, newTurn});
   };
 
   const resetForm = () => {
@@ -39,10 +52,17 @@ function App() {
   };
 
   return (
+    <>
+    <div
+        className="cursor"
+        style={{
+          transform: `translate(${position.x}px, ${position.y}px)`,
+        }}
+      />
     <main className="board">
       <h1>Tryky</h1>
-      <button>
-        <FontAwesomeIcon onClick={resetForm} icon={faRotateRight} size="3x" />
+      <button onClick={resetForm}>
+        <FontAwesomeIcon icon={faRotateRight} size="3x" />
       </button>
       <Board board={board} updateBoard={updateBoard} />
 
@@ -53,6 +73,7 @@ function App() {
 
       <WinnerModal resetForm={resetForm} winner={winner} />
     </main>
+    </>
   );
 }
 
